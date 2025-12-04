@@ -1,20 +1,21 @@
 <script setup>
-
+import { LayoutGrid, ArrowLeftRight, SquareParking, Users, Car, Wallet, ChartColumn, Settings } from 'lucide-vue-next';
 </script>
 
 <template>
     <div class="w-64 min-h-screen bg-secondary text-white p-4 border-r-2 border-border">
-        <h3>Menu</h3>
+        <h3 class="text-[#9e9e9e]">Menu</h3>
         <div>
             <ul>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Dashboard</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Entrada/Saída</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Gerenciar Vagas</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Funcionários</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Clientes e Veículos</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Transações</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Relatórios</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer">Configurações</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><LayoutGrid size="18"/> Dashboard</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><ArrowLeftRight size="18"/> Entrada/Saída</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><SquareParking size="18"/> Gerenciar Vagas</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><Users size="18"/> Funcionários</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><Car size="18"/> Clientes e Veículos</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><Wallet size="18"/> Transações</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><ChartColumn size="18"/> Relatórios</li>
+                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><Settings size="18"/> Configurações</li>
+                
             </ul>    
         </div>
     </div>
