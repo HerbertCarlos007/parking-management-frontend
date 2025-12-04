@@ -1,6 +1,7 @@
 @import './base.css';
 
 @theme {  
- 
-  
+    --color-primary: #020202;
+    --color-secondary: #060606;
+    --color-border: #161616;  
 }
