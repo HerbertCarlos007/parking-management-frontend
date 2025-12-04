@@ -1,5 +1,8 @@
 <script setup>
+import { useRouter } from 'vue-router';
 import { LayoutGrid, ArrowLeftRight, SquareParking, Users, Car, Wallet, ChartColumn, Settings } from 'lucide-vue-next';
+
+const router = useRouter()
 </script>
 
 <template>
@@ -8,7 +11,7 @@ import { LayoutGrid, ArrowLeftRight, SquareParking, Users, Car, Wallet, ChartCol
         <div>
             <ul>
                 <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><LayoutGrid size="18"/> Dashboard</li>
-                <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><ArrowLeftRight size="18"/> Entrada/Saída</li>
+                <li @click="() => router.push('/parking-entry')"  class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><ArrowLeftRight size="18"/> Entrada/Saída</li>
                 <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><SquareParking size="18"/> Gerenciar Vagas</li>
                 <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><Users size="18"/> Funcionários</li>
                 <li class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"><Car size="18"/> Clientes e Veículos</li>
