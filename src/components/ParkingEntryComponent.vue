@@ -1,12 +1,25 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import parkingEntry from '@/services/parkingEntry';
 
-const teste = 1;
-const novo = ref(false)
+const parkEntriesOpen = ref([]) ;
+const isFormOpen = ref(false);
 
+const toggleForm = () => {
+  isFormOpen.value = !isFormOpen.value;
+};
 
-const openForm = () => {
-  novo.value = !novo.value;
+onMounted(() => {
+  getParkingEntries();
+});
+
+const getParkingEntries = async () => {
+  try {
+    const response = await parkingEntry.getParkingEntriesService('Aberta');
+    parkEntriesOpen.value = response.data;
+  } catch (error) {
+    
+  }
 };
 
 </script>
@@ -19,12 +32,12 @@ const openForm = () => {
     </section>
 
     <section>
-      <button v-if="novo" @click="openForm()" class="bg-blue-500 text-white p-2 rounded-md">
+      <button v-if="isFormOpen" @click="toggleForm()" class="bg-blue-500 text-white p-2 rounded-md">
         Fechar
       </button>
 
 
-      <button v-else  @click="openForm()" class="bg-blue-500 text-white p-2 rounded-md">
+      <button v-else  @click="toggleForm()" class="bg-blue-500 text-white p-2 rounded-md">
         + Nova Entrada
       </button>
 
@@ -32,7 +45,7 @@ const openForm = () => {
     </section>
   </div>
 
-  <div v-if="novo"  class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6">
+  <div v-if="isFormOpen"  class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6">
     <form class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
       <!-- Placa do Veículo -->
       <div class="flex flex-col gap-2">
@@ -98,23 +111,25 @@ const openForm = () => {
     </form>
   </div>
 
-  <h1 class="text-2xl text-white mt-10">Veículos em Estacionamento (0)</h1>
+  <h1 class="text-2xl text-white mt-10">Veículos em Estacionamento ({{ parkEntriesOpen.length  }})</h1>
 
   <div
-    v-if="teste > 0"
+    v-if="parkEntriesOpen.length > 0"
     class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 mt-5 bg-secondary flex flex-col gap-2 shadow-lg"
   >
-    <h2 class="text-lg font-semibold">Herbert</h2>
+  <div v-for="parkEntry in parkEntriesOpen" :key="parkEntry.id">
+    <h2 class="text-2xl font-semibold mb-2">{{ parkEntry.plate }}</h2>
 
-    <div class="text-sm text-gray-300 flex flex-col gap-1">
-      <span><strong class="text-white">Cliente:</strong> Herbert</span>
-      <span><strong class="text-white">Vaga:</strong> Comum</span>
-      <span><strong class="text-white">Tipo:</strong> Mensal</span>
+    <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
+      <span><strong class="text-white mb-2">Cliente:</strong> {{ parkEntry.client_name }}</span>
+      <!-- <span><strong class="text-white">Vaga:</strong> Comum</span> -->
+      <span><strong class="text-white mb-2">Tipo:</strong> {{ parkEntry.type_entry }}</span>
     </div>
 
-    <div class="mt-3text-xs text-gray-200">22:00:00</div>
-
+    <div class="mt-3text-xs text-gray-200 mb-2">{{ parkEntry.entered_at }}</div>
+    </div>
     <button class="bg-red-500 p-1 rounded-md">Registrar Saída</button>
+    
   </div>
 
   <div
@@ -148,7 +163,7 @@ const openForm = () => {
         <tbody class="text-sm">
           <tr class="border-b border-border hover:bg-gray-900 transition">
             <td class="py-4 px-4 font-semibold">GHS5D98</td>
-            <td class="py-4 px-4 text-gray-300">HERBERT</td>
+            <td class="py-4 px-4 text-gray-300">Diego</td>
             <td class="py-4 px-4 text-gray-400">Ocasional</td>
             <td class="py-4 px-4 text-gray-400">(comum)</td>
             <td class="py-4 px-4 text-gray-400">17:04:25</td>
