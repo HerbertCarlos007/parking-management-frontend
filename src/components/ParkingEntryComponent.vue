@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import parkingEntry from '@/services/parkingEntry';
 
 const parkEntriesOpen = ref([]) ;
+const parkEntriesClosed = ref([]) ;
 const isFormOpen = ref(false);
 
 const toggleForm = () => {
@@ -10,13 +11,23 @@ const toggleForm = () => {
 };
 
 onMounted(() => {
-  getParkingEntries();
+  getParkingEntriesOpen()
+  getParkingEntriesClosed()
 });
 
-const getParkingEntries = async () => {
+const getParkingEntriesOpen = async () => {
   try {
     const response = await parkingEntry.getParkingEntriesService('Aberta');
     parkEntriesOpen.value = response.data;
+  } catch (error) {
+    
+  }
+};
+
+const getParkingEntriesClosed = async () => {
+  try {
+    const response = await parkingEntry.getParkingEntriesService('Fechada');
+    parkEntriesClosed.value = response.data;
   } catch (error) {
     
   }
@@ -101,7 +112,7 @@ const getParkingEntries = async () => {
         </button>
 
         <button
-          @click="openForm()"
+          @click="toggleForm()"
           type="button"
           class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-md font-medium"
         >
@@ -117,16 +128,16 @@ const getParkingEntries = async () => {
     v-if="parkEntriesOpen.length > 0"
     class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 mt-5 bg-secondary flex flex-col gap-2 shadow-lg"
   >
-  <div v-for="parkEntry in parkEntriesOpen" :key="parkEntry.id">
-    <h2 class="text-2xl font-semibold mb-2">{{ parkEntry.plate }}</h2>
+  <div v-for="parkEntryOpen in parkEntriesOpen" :key="parkEntryOpen.id">
+    <h2 class="text-2xl font-semibold mb-2">{{ parkEntryOpen.plate }}</h2>
 
     <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
-      <span><strong class="text-white mb-2">Cliente:</strong> {{ parkEntry.client_name }}</span>
+      <span><strong class="text-white mb-2">Cliente:</strong> {{ parkEntryOpen.client_name }}</span>
       <!-- <span><strong class="text-white">Vaga:</strong> Comum</span> -->
-      <span><strong class="text-white mb-2">Tipo:</strong> {{ parkEntry.type_entry }}</span>
+      <span><strong class="text-white mb-2">Tipo:</strong> {{ parkEntryOpen.type_entry }}</span>
     </div>
 
-    <div class="mt-3text-xs text-gray-200 mb-2">{{ parkEntry.entered_at }}</div>
+    <div class="mt-3text-xs text-gray-200 mb-2">{{ parkEntryOpen.entered_at }}</div>
     </div>
     <button class="bg-red-500 p-1 rounded-md">Registrar Saída</button>
     
@@ -153,7 +164,7 @@ const getParkingEntries = async () => {
             <th class="py-3 px-4">Placa</th>
             <th class="py-3 px-4">Cliente</th>
             <th class="py-3 px-4">Tipo</th>
-            <th class="py-3 px-4">Vaga</th>
+            <!-- <th class="py-3 px-4">Vaga</th> -->
             <th class="py-3 px-4">Entrada</th>
             <th class="py-3 px-4">Saída</th>
             <th class="py-3 px-4 text-right">Valor</th>
@@ -161,24 +172,14 @@ const getParkingEntries = async () => {
         </thead>
 
         <tbody class="text-sm">
-          <tr class="border-b border-border hover:bg-gray-900 transition">
-            <td class="py-4 px-4 font-semibold">GHS5D98</td>
-            <td class="py-4 px-4 text-gray-300">Diego</td>
-            <td class="py-4 px-4 text-gray-400">Ocasional</td>
-            <td class="py-4 px-4 text-gray-400">(comum)</td>
-            <td class="py-4 px-4 text-gray-400">17:04:25</td>
-            <td class="py-4 px-4 text-gray-400">17:23:49</td>
-            <td class="py-4 px-4 text-right font-semibold">R$ 249485.00</td>
-          </tr>
-
-          <tr class="border-b border-border hover:bg-gray-900 transition">
-            <td class="py-4 px-4 font-semibold">5555555</td>
-            <td class="py-4 px-4 text-gray-300">teste</td>
-            <td class="py-4 px-4 text-gray-400">Ocasional</td>
-            <td class="py-4 px-4 text-gray-400">(comum)</td>
-            <td class="py-4 px-4 text-gray-400">21:13:30</td>
-            <td class="py-4 px-4 text-gray-400">21:13:35</td>
-            <td class="py-4 px-4 text-right font-semibold">R$ 252721.00</td>
+          <tr v-for="parkEntryClosed in parkEntriesClosed" :key="parkEntryClosed.id" class="border-b border-border hover:bg-gray-900 transition">
+            <td class="py-4 px-4 font-semibold">{{ parkEntryClosed.plate }}</td>
+            <td class="py-4 px-4 text-gray-300">{{parkEntryClosed.client_name}}</td>
+            <td class="py-4 px-4 text-gray-400">{{ parkEntryClosed.type_entry }}</td>
+            <!-- <td class="py-4 px-4 text-gray-400">(comum)</td> -->
+            <td class="py-4 px-4 text-gray-400">{{ parkEntryClosed.entered_at }}</td>
+            <td class="py-4 px-4 text-gray-400">{{ parkEntryClosed.left_at }}</td>
+            <td class="py-4 px-4 text-right font-semibold">R$ {{ parkEntryClosed.price }}</td>
           </tr>
         </tbody>
       </table>
