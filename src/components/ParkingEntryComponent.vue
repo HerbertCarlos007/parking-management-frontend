@@ -75,6 +75,16 @@ const registerParkingEntry = async () => {
   }
 };
 
+const registerParkingExit = async (id) => {
+  try {
+    const response = await parkingEntryService.registerParkingService(id);
+    getParkingEntriesOpen();
+    getParkingEntriesClosed();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 </script>
 
 <template>
@@ -246,7 +256,7 @@ const registerParkingEntry = async () => {
       {{ parkEntryOpen.entered_at }}
     </div>
 
-    <button class="bg-red-500 p-1 rounded-md hover:bg-red-600">
+    <button @click="registerParkingExit(parkEntryOpen.id)" class="bg-red-500 p-1 rounded-md hover:bg-red-600">
       Registrar Saída
     </button>
   </div>
