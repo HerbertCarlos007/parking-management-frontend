@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import parkingEntryService from "@/services/parkingEntry";
 import clientService from "@/services/client";
 import parkingSpotService from "@/services/parkingSpot";
@@ -9,6 +9,15 @@ const clients = ref([]);
 const parkingSpotsAvailables = ref([]);
 const parkEntriesClosed = ref([]);
 const isFormOpen = ref(false);
+
+const parkingEntryForm = reactive({
+  plate: "",
+  type_entry: "",
+  client_id: "",
+  spot_id: "",
+  "model": "",
+  "color": ""
+});
 
 const toggleForm = () => {
   isFormOpen.value = !isFormOpen.value;
@@ -53,6 +62,19 @@ const getParkingSpotsAvailables = async () => {
     parkingSpotsAvailables.value = response.data;
   } catch (error) {}
 };
+
+const registerParkingEntry = async () => {
+  try {
+    const response = await parkingEntryService.createParkingEntryService(
+      parkingEntryForm
+    );
+    getParkingEntriesOpen();
+    toggleForm();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 </script>
 
 <template>
@@ -85,13 +107,34 @@ const getParkingSpotsAvailables = async () => {
     v-if="isFormOpen"
     class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6"
   >
-    <form class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+    <form @submit.prevent="registerParkingEntry()" class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
       <!-- Placa do Veículo -->
       <div class="flex flex-col gap-2">
         <label class="text-sm text-gray-300">Placa do Veículo</label>
         <input
           type="text"
           placeholder="ABC-1234"
+          v-model="parkingEntryForm.plate"
+          class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm text-gray-300">Modelo de Veículo</label>
+        <input
+          type="text"
+          placeholder="HRV"
+          v-model="parkingEntryForm.model"
+          class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
+        />
+      </div>
+
+       <div class="flex flex-col gap-2">
+        <label class="text-sm text-gray-300">CorVeículo</label>
+        <input
+          type="text"
+          placeholder="PRATA"
+          v-model="parkingEntryForm.color"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         />
       </div>
@@ -101,9 +144,11 @@ const getParkingSpotsAvailables = async () => {
         <label class="text-sm text-gray-300">Tipo de Cliente</label>
         <select
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
+          v-model="parkingEntryForm.type_entry"
         >
-          <option>Ocasional</option>
-          <option>Mensal</option>
+          <option value="">Selecione um cliente</option>
+          <option value="Ocasional">Ocasional</option>
+          <option value="Mensal">Mensal</option>
         </select>
       </div>
 
@@ -114,6 +159,7 @@ const getParkingSpotsAvailables = async () => {
         </label>
 
         <select
+        v-model="parkingEntryForm.client_id"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600 text-gray-300"
         >
           <option value="">Selecione um cliente</option>
@@ -128,8 +174,9 @@ const getParkingSpotsAvailables = async () => {
         <label class="text-sm text-gray-300">Vaga Disponível</label>
         <select
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
+          v-model="parkingEntryForm.spot_id"
         >
-          <option>Selecione uma vaga</option>
+          <option value="">Selecione uma vaga</option>
           <option
             v-for="parkingSpot in parkingSpotsAvailables"
             :key="parkingSpot.id"
@@ -164,31 +211,48 @@ const getParkingSpotsAvailables = async () => {
     Veículos em Estacionamento ({{ parkEntriesOpen.length }})
   </h1>
 
+<div
+  v-if="parkEntriesOpen.length > 0"
+ class="grid grid-cols-3 2xl:grid-cols-4 gap-4 mt-5"
+
+>
   <div
-    v-if="parkEntriesOpen.length > 0"
-    class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 mt-5 bg-secondary flex flex-col gap-2 shadow-lg"
+    v-for="parkEntryOpen in parkEntriesOpen"
+    :key="parkEntryOpen.id"
+    class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 bg-secondary flex flex-col gap-2 shadow-lg"
   >
-    <div v-for="parkEntryOpen in parkEntriesOpen" :key="parkEntryOpen.id">
-      <h2 class="text-2xl font-semibold mb-2">{{ parkEntryOpen.plate }}</h2>
+    <h2 class="text-2xl font-semibold mb-2">
+      {{ parkEntryOpen.plate }}
+    </h2>
 
-      <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
-        <span
-          ><strong class="text-white mb-2">Cliente:</strong>
-          {{ parkEntryOpen.client_name }}</span
-        >
-        <!-- <span><strong class="text-white">Vaga:</strong> Comum</span> -->
-        <span
-          ><strong class="text-white mb-2">Tipo:</strong>
-          {{ parkEntryOpen.type_entry }}</span
-        >
-      </div>
+    <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
+      <span>
+        <strong class="text-white">Cliente:</strong>
+        {{ parkEntryOpen.client_name }}
+      </span>
 
-      <div class="mt-3text-xs text-gray-200 mb-2">
-        {{ parkEntryOpen.entered_at }}
-      </div>
+      <span>
+        <strong class="text-white">Tipo:</strong>
+        {{ parkEntryOpen.type_entry }}
+      </span>
+
+      <span>
+        <strong class="text-white">Modelo:</strong>
+        {{ parkEntryOpen.model }} - {{ parkEntryOpen.color }}
+      </span>
     </div>
-    <button class="bg-red-500 p-1 rounded-md">Registrar Saída</button>
+
+    <div class="text-xs text-gray-200 mb-2">
+      {{ parkEntryOpen.entered_at }}
+    </div>
+
+    <button class="bg-red-500 p-1 rounded-md hover:bg-red-600">
+      Registrar Saída
+    </button>
   </div>
+</div>
+
+
 
   <div
     v-else

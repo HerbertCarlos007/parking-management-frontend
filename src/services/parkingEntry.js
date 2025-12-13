@@ -9,6 +9,15 @@ async function getParkingEntriesService(status) {
     }
 }
 
+async function createParkingEntryService(parkingEntryData) {
+    try {
+        const response = await api.post('parking-entries', parkingEntryData)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export default {
-    getParkingEntriesService
+    getParkingEntriesService, createParkingEntryService
 }
