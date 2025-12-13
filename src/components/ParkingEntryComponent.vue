@@ -2,9 +2,11 @@
 import { ref, onMounted } from "vue";
 import parkingEntryService from "@/services/parkingEntry";
 import clientService from "@/services/client";
+import parkingSpotService from "@/services/parkingSpot";
 
 const parkEntriesOpen = ref([]);
 const clients = ref([]);
+const parkingSpotsAvailables = ref([]);
 const parkEntriesClosed = ref([]);
 const isFormOpen = ref(false);
 
@@ -16,18 +18,23 @@ onMounted(() => {
   getParkingEntriesOpen();
   getParkingEntriesClosed();
   getClients();
+  getParkingSpotsAvailables();
 });
 
 const getParkingEntriesOpen = async () => {
   try {
-    const response = await parkingEntryService.getParkingEntriesService("Aberta");
+    const response = await parkingEntryService.getParkingEntriesService(
+      "Aberta"
+    );
     parkEntriesOpen.value = response.data;
   } catch (error) {}
 };
 
 const getParkingEntriesClosed = async () => {
   try {
-    const response = await parkingEntryService.getParkingEntriesService("Fechada");
+    const response = await parkingEntryService.getParkingEntriesService(
+      "Fechada"
+    );
     parkEntriesClosed.value = response.data;
   } catch (error) {}
 };
@@ -36,6 +43,14 @@ const getClients = async () => {
   try {
     const response = await clientService.getClientsService();
     clients.value = response.data;
+  } catch (error) {}
+};
+
+const getParkingSpotsAvailables = async () => {
+  try {
+    const response =
+      await parkingSpotService.getParkingSpotsAvailablesService();
+    parkingSpotsAvailables.value = response.data;
   } catch (error) {}
 };
 </script>
@@ -88,7 +103,7 @@ const getClients = async () => {
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         >
           <option>Ocasional</option>
-          <option>Mensalista</option>
+          <option>Mensal</option>
         </select>
       </div>
 
@@ -102,11 +117,7 @@ const getClients = async () => {
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600 text-gray-300"
         >
           <option value="">Selecione um cliente</option>
-          <option
-            v-for="client in clients"
-            :key="client.id"
-            :value="client.id"
-          >
+          <option v-for="client in clients" :key="client.id" :value="client.id">
             {{ client.name }}
           </option>
         </select>
@@ -119,9 +130,13 @@ const getClients = async () => {
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         >
           <option>Selecione uma vaga</option>
-          <option>A1</option>
-          <option>A2</option>
-          <option>B1</option>
+          <option
+            v-for="parkingSpot in parkingSpotsAvailables"
+            :key="parkingSpot.id"
+            :value="parkingSpot.id"
+          >
+            {{ parkingSpot.code }}
+          </option>
         </select>
       </div>
 
