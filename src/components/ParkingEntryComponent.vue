@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import parkingEntry from '@/services/parkingEntry';
+import { ref, onMounted } from "vue";
+import parkingEntryService from "@/services/parkingEntry";
+import clientService from "@/services/client";
 
-const parkEntriesOpen = ref([]) ;
-const parkEntriesClosed = ref([]) ;
+const parkEntriesOpen = ref([]);
+const clients = ref([]);
+const parkEntriesClosed = ref([]);
 const isFormOpen = ref(false);
 
 const toggleForm = () => {
@@ -11,28 +13,31 @@ const toggleForm = () => {
 };
 
 onMounted(() => {
-  getParkingEntriesOpen()
-  getParkingEntriesClosed()
+  getParkingEntriesOpen();
+  getParkingEntriesClosed();
+  getClients();
 });
 
 const getParkingEntriesOpen = async () => {
   try {
-    const response = await parkingEntry.getParkingEntriesService('Aberta');
+    const response = await parkingEntryService.getParkingEntriesService("Aberta");
     parkEntriesOpen.value = response.data;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 };
 
 const getParkingEntriesClosed = async () => {
   try {
-    const response = await parkingEntry.getParkingEntriesService('Fechada');
+    const response = await parkingEntryService.getParkingEntriesService("Fechada");
     parkEntriesClosed.value = response.data;
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 };
 
+const getClients = async () => {
+  try {
+    const response = await clientService.getClientsService();
+    clients.value = response.data;
+  } catch (error) {}
+};
 </script>
 
 <template>
@@ -43,20 +48,28 @@ const getParkingEntriesClosed = async () => {
     </section>
 
     <section>
-      <button v-if="isFormOpen" @click="toggleForm()" class="bg-blue-500 text-white p-2 rounded-md">
+      <button
+        v-if="isFormOpen"
+        @click="toggleForm()"
+        class="bg-blue-500 text-white p-2 rounded-md"
+      >
         Fechar
       </button>
 
-
-      <button v-else  @click="toggleForm()" class="bg-blue-500 text-white p-2 rounded-md">
+      <button
+        v-else
+        @click="toggleForm()"
+        class="bg-blue-500 text-white p-2 rounded-md"
+      >
         + Nova Entrada
       </button>
-
-      
     </section>
   </div>
 
-  <div v-if="isFormOpen"  class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6">
+  <div
+    v-if="isFormOpen"
+    class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6"
+  >
     <form class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
       <!-- Placa do Veículo -->
       <div class="flex flex-col gap-2">
@@ -81,12 +94,22 @@ const getParkingEntriesClosed = async () => {
 
       <!-- Nome do Cliente -->
       <div class="flex flex-col gap-2">
-        <label class="text-sm text-gray-300">Nome do Cliente (opcional)</label>
-        <input
-          type="text"
-          placeholder="Nome do cliente"
-          class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
-        />
+        <label class="text-sm text-gray-300">
+          Nome do Cliente (opcional)
+        </label>
+
+        <select
+          class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600 text-gray-300"
+        >
+          <option value="">Selecione um cliente</option>
+          <option
+            v-for="client in clients"
+            :key="client.id"
+            :value="client.id"
+          >
+            {{ client.name }}
+          </option>
+        </select>
       </div>
 
       <!-- Vaga Disponível -->
@@ -122,25 +145,34 @@ const getParkingEntriesClosed = async () => {
     </form>
   </div>
 
-  <h1 class="text-2xl text-white mt-10">Veículos em Estacionamento ({{ parkEntriesOpen.length  }})</h1>
+  <h1 class="text-2xl text-white mt-10">
+    Veículos em Estacionamento ({{ parkEntriesOpen.length }})
+  </h1>
 
   <div
     v-if="parkEntriesOpen.length > 0"
     class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 mt-5 bg-secondary flex flex-col gap-2 shadow-lg"
   >
-  <div v-for="parkEntryOpen in parkEntriesOpen" :key="parkEntryOpen.id">
-    <h2 class="text-2xl font-semibold mb-2">{{ parkEntryOpen.plate }}</h2>
+    <div v-for="parkEntryOpen in parkEntriesOpen" :key="parkEntryOpen.id">
+      <h2 class="text-2xl font-semibold mb-2">{{ parkEntryOpen.plate }}</h2>
 
-    <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
-      <span><strong class="text-white mb-2">Cliente:</strong> {{ parkEntryOpen.client_name }}</span>
-      <!-- <span><strong class="text-white">Vaga:</strong> Comum</span> -->
-      <span><strong class="text-white mb-2">Tipo:</strong> {{ parkEntryOpen.type_entry }}</span>
-    </div>
+      <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
+        <span
+          ><strong class="text-white mb-2">Cliente:</strong>
+          {{ parkEntryOpen.client_name }}</span
+        >
+        <!-- <span><strong class="text-white">Vaga:</strong> Comum</span> -->
+        <span
+          ><strong class="text-white mb-2">Tipo:</strong>
+          {{ parkEntryOpen.type_entry }}</span
+        >
+      </div>
 
-    <div class="mt-3text-xs text-gray-200 mb-2">{{ parkEntryOpen.entered_at }}</div>
+      <div class="mt-3text-xs text-gray-200 mb-2">
+        {{ parkEntryOpen.entered_at }}
+      </div>
     </div>
     <button class="bg-red-500 p-1 rounded-md">Registrar Saída</button>
-    
   </div>
 
   <div
@@ -172,14 +204,28 @@ const getParkingEntriesClosed = async () => {
         </thead>
 
         <tbody class="text-sm">
-          <tr v-for="parkEntryClosed in parkEntriesClosed" :key="parkEntryClosed.id" class="border-b border-border hover:bg-gray-900 transition">
+          <tr
+            v-for="parkEntryClosed in parkEntriesClosed"
+            :key="parkEntryClosed.id"
+            class="border-b border-border hover:bg-gray-900 transition"
+          >
             <td class="py-4 px-4 font-semibold">{{ parkEntryClosed.plate }}</td>
-            <td class="py-4 px-4 text-gray-300">{{parkEntryClosed.client_name}}</td>
-            <td class="py-4 px-4 text-gray-400">{{ parkEntryClosed.type_entry }}</td>
+            <td class="py-4 px-4 text-gray-300">
+              {{ parkEntryClosed.client_name }}
+            </td>
+            <td class="py-4 px-4 text-gray-400">
+              {{ parkEntryClosed.type_entry }}
+            </td>
             <!-- <td class="py-4 px-4 text-gray-400">(comum)</td> -->
-            <td class="py-4 px-4 text-gray-400">{{ parkEntryClosed.entered_at }}</td>
-            <td class="py-4 px-4 text-gray-400">{{ parkEntryClosed.left_at }}</td>
-            <td class="py-4 px-4 text-right font-semibold">R$ {{ parkEntryClosed.price }}</td>
+            <td class="py-4 px-4 text-gray-400">
+              {{ parkEntryClosed.entered_at }}
+            </td>
+            <td class="py-4 px-4 text-gray-400">
+              {{ parkEntryClosed.left_at }}
+            </td>
+            <td class="py-4 px-4 text-right font-semibold">
+              R$ {{ parkEntryClosed.price }}
+            </td>
           </tr>
         </tbody>
       </table>
