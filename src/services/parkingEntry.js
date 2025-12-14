@@ -18,15 +18,17 @@ async function createParkingEntryService(parkingEntryData) {
     }
 }
 
-async function registerParkingService(id) {
-     try {
+async function registerParkingExitService(id) {
+    try {
         const response = await api.put(`parking-entries/${id}`)
-        return response.data
+        return response
     } catch (error) {
         console.error(error)
+        throw error
     }
 }
 
+
 export default {
-    getParkingEntriesService, createParkingEntryService,registerParkingService
+    getParkingEntriesService, createParkingEntryService, registerParkingExitService
 }

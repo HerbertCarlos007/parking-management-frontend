@@ -3,6 +3,7 @@ import { ref, onMounted, reactive } from "vue";
 import parkingEntryService from "@/services/parkingEntry";
 import clientService from "@/services/client";
 import parkingSpotService from "@/services/parkingSpot";
+import Swal from "sweetalert2";
 
 const parkEntriesOpen = ref([]);
 const clients = ref([]);
@@ -15,8 +16,8 @@ const parkingEntryForm = reactive({
   type_entry: "",
   client_id: "",
   spot_id: "",
-  "model": "",
-  "color": ""
+  model: "",
+  color: "",
 });
 
 const toggleForm = () => {
@@ -77,14 +78,23 @@ const registerParkingEntry = async () => {
 
 const registerParkingExit = async (id) => {
   try {
-    const response = await parkingEntryService.registerParkingService(id);
-    getParkingEntriesOpen();
-    getParkingEntriesClosed();
+    const response = await parkingEntryService.registerParkingExitService(id);
+    const price = response.data.data.price;
+    if (response.status === 200) {
+      Swal.fire({
+        title: "Sucesso!",
+        text: `Valor a cobrar: R$ ${price}`,
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        getParkingEntriesOpen();
+        getParkingEntriesClosed();
+      });
+    }
   } catch (error) {
     console.error(error);
   }
 };
-
 </script>
 
 <template>
@@ -117,7 +127,10 @@ const registerParkingExit = async (id) => {
     v-if="isFormOpen"
     class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6"
   >
-    <form @submit.prevent="registerParkingEntry()" class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+    <form
+      @submit.prevent="registerParkingEntry()"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white"
+    >
       <!-- Placa do Veículo -->
       <div class="flex flex-col gap-2">
         <label class="text-sm text-gray-300">Placa do Veículo</label>
@@ -139,7 +152,7 @@ const registerParkingExit = async (id) => {
         />
       </div>
 
-       <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2">
         <label class="text-sm text-gray-300">CorVeículo</label>
         <input
           type="text"
@@ -169,7 +182,7 @@ const registerParkingExit = async (id) => {
         </label>
 
         <select
-        v-model="parkingEntryForm.client_id"
+          v-model="parkingEntryForm.client_id"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600 text-gray-300"
         >
           <option value="">Selecione um cliente</option>
@@ -221,48 +234,48 @@ const registerParkingExit = async (id) => {
     Veículos em Estacionamento ({{ parkEntriesOpen.length }})
   </h1>
 
-<div
-  v-if="parkEntriesOpen.length > 0"
- class="grid grid-cols-3 2xl:grid-cols-4 gap-4 mt-5"
-
->
   <div
-    v-for="parkEntryOpen in parkEntriesOpen"
-    :key="parkEntryOpen.id"
-    class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 bg-secondary flex flex-col gap-2 shadow-lg"
+    v-if="parkEntriesOpen.length > 0"
+    class="grid grid-cols-3 2xl:grid-cols-4 gap-4 mt-5"
   >
-    <h2 class="text-2xl font-semibold mb-2">
-      {{ parkEntryOpen.plate }}
-    </h2>
+    <div
+      v-for="parkEntryOpen in parkEntriesOpen"
+      :key="parkEntryOpen.id"
+      class="w-80 text-white border-2 border-[#04233a] rounded-md p-4 bg-secondary flex flex-col gap-2 shadow-lg"
+    >
+      <h2 class="text-2xl font-semibold mb-2">
+        {{ parkEntryOpen.plate }}
+      </h2>
 
-    <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
-      <span>
-        <strong class="text-white">Cliente:</strong>
-        {{ parkEntryOpen.client_name }}
-      </span>
+      <div class="text-sm text-gray-300 flex flex-col gap-1 mb-2">
+        <span>
+          <strong class="text-white">Cliente:</strong>
+          {{ parkEntryOpen.client_name }}
+        </span>
 
-      <span>
-        <strong class="text-white">Tipo:</strong>
-        {{ parkEntryOpen.type_entry }}
-      </span>
+        <span>
+          <strong class="text-white">Tipo:</strong>
+          {{ parkEntryOpen.type_entry }}
+        </span>
 
-      <span>
-        <strong class="text-white">Modelo:</strong>
-        {{ parkEntryOpen.model }} - {{ parkEntryOpen.color }}
-      </span>
+        <span>
+          <strong class="text-white">Modelo:</strong>
+          {{ parkEntryOpen.model }} - {{ parkEntryOpen.color }}
+        </span>
+      </div>
+
+      <div class="text-xs text-gray-200 mb-2">
+        {{ parkEntryOpen.entered_at }}
+      </div>
+
+      <button
+        @click="registerParkingExit(parkEntryOpen.id)"
+        class="bg-red-500 p-1 rounded-md hover:bg-red-600"
+      >
+        Registrar Saída
+      </button>
     </div>
-
-    <div class="text-xs text-gray-200 mb-2">
-      {{ parkEntryOpen.entered_at }}
-    </div>
-
-    <button @click="registerParkingExit(parkEntryOpen.id)" class="bg-red-500 p-1 rounded-md hover:bg-red-600">
-      Registrar Saída
-    </button>
   </div>
-</div>
-
-
 
   <div
     v-else
