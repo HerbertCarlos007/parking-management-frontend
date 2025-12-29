@@ -4,11 +4,20 @@ import { SquarePen, Trash } from "lucide-vue-next";
 import userService from "@/services/user.js";
 
 const users = ref([]);
+const showEditModal = ref(false);
+const editingUserId = ref(null);
 
 const userForm = reactive({
   name: "",
   email: "",
   password: "",
+  phone_number: "",
+  role: "",
+});
+
+const editForm = reactive({
+  name: "",
+  email: "",
   phone_number: "",
   role: "",
 });
@@ -29,6 +38,37 @@ const getUsers = async () => {
 const createUser = async () => {
   try {
     await userService.createUserService(userForm);
+    getUsers();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteUser = async (userId) => {
+  try {
+    await userService.deleteUserService(userId);
+    getUsers();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const openEditModal = (user) => {
+  editingUserId.value = user.id;
+
+  editForm.name = user.name;
+  editForm.email = user.email;
+  editForm.phone_number = user.phone_number;
+  editForm.role = user.role;
+
+  showEditModal.value = true;
+};
+
+const updateUser = async () => {
+  try {
+    await userService.updateUserService(editingUserId.value, editForm);
+    showEditModal.value = false;
+    getUsers();
   } catch (error) {
     console.error(error);
   }
@@ -137,14 +177,57 @@ const createUser = async () => {
             <td class="py-4 px-4 text-gray-400">{{ user.role }}</td>
 
             <td class="flex gap-2 py-4 px-4 text-gray-400">
-              <SquarePen class="cursor-pointer" />
-              <Trash color="#e01b24" class="cursor-pointer" />
+              <SquarePen @click="openEditModal(user)" class="cursor-pointer" />
+              <Trash @click="deleteUser(user.id)" color="#e01b24" class="cursor-pointer" />
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+
+  <div v-if="showEditModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+  <div class="bg-secondary  p-10 rounded-lg border border-border">
+    <h2 class="text-white text-2xl mb-4">Editar Funcionário</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+      <div>
+        <label class="text-sm text-gray-400">Nome</label>
+        <input v-model="editForm.name" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">E-mail</label>
+        <input v-model="editForm.email" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">Telefone</label>
+        <input v-model="editForm.phone_number" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">Cargo</label>
+        <select v-model="editForm.role" class="w-full bg-black border border-border rounded px-4 py-2">
+           <option value="Administrador">Administrador</option>
+          <option value="Gerente">Gerente</option>
+          <option value="Usuario">Usuario</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4 mt-6">
+      <button @click="showEditModal = false" class="px-4 py-2 border border-border text-white rounded">
+        Cancelar
+      </button>
+
+      <button @click="updateUser" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
+
 </template>
 
 <style scoped></style>

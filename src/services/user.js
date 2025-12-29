@@ -18,6 +18,24 @@ async function createUserService(userData) {
     }
 }
 
+async function updateUserService(user, userData) {
+    try {
+        const response = await api.put(`users/${user}`, userData)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function deleteUserService(user) {
+    try {
+        const response = await api.delete(`users/${user}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}   
+
 export default {
-    getUsersService, createUserService
+    getUsersService, createUserService, updateUserService, deleteUserService
 }
