@@ -5,10 +5,17 @@ import userService from "@/services/user.js";
 
 const users = ref([]);
 
+const userForm = reactive({
+  name: "",
+  email: "",
+  password: "",
+  phone_number: "",
+  role: "",
+});
+
 onMounted(() => {
   getUsers()
 });
-
 
 const getUsers = async () => {
   try {
@@ -16,6 +23,14 @@ const getUsers = async () => {
     users.value = response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
+  }
+};
+
+const createUser = async () => {
+  try {
+    await userService.createUserService(userForm);
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -40,6 +55,7 @@ const getUsers = async () => {
         <input
           type="text"
           placeholder="Nome completo"
+          v-model="userForm.name"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         />
       </div>
@@ -49,6 +65,7 @@ const getUsers = async () => {
         <input
           type="text"
           placeholder="email@example"
+          v-model="userForm.email"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         />
       </div>
@@ -56,8 +73,9 @@ const getUsers = async () => {
       <div class="flex flex-col gap-2">
         <label class="text-sm text-gray-300">Senha</label>
         <input
-          type="text"
-          placeholder="(99) 99999-9999"
+          type="password"
+          placeholder="********"
+          v-model="userForm.password"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         />
       </div>
@@ -67,14 +85,15 @@ const getUsers = async () => {
         <input
           type="text"
           placeholder="(99) 99999-9999"
+          v-model="userForm.phone_number"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         />
       </div>
 
-      <!-- Vaga Disponível -->
       <div class="flex flex-col gap-2">
         <label class="text-sm text-gray-300">Cargo</label>
         <select
+          v-model="userForm.role"
           class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
         >
           <option value="">Selecione uma cargo</option>
@@ -85,7 +104,7 @@ const getUsers = async () => {
       </div>
     </form>
     <button
-      type="submit"
+      @click="createUser()"
       class="w-full mt-5 text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-md font-medium"
     >
       + Adicionar Funcionário

@@ -9,6 +9,15 @@ async function getUsersService() {
     }
 }
 
+async function createUserService(userData) {
+    try {
+        const response = await api.post('users', userData)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export default {
-    getUsersService
+    getUsersService, createUserService
 }
