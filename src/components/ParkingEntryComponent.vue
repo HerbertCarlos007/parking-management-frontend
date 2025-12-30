@@ -89,6 +89,7 @@ const registerParkingExit = async (id) => {
       }).then(() => {
         getParkingEntriesOpen();
         getParkingEntriesClosed();
+        getParkingSpotsAvailables();
       });
     }
   } catch (error) {

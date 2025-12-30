@@ -43,7 +43,13 @@ const isActive = (path) => {
           <ArrowLeftRight size="18" /> Entrada/Saída
         </li>
         <li
-          class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"
+            @click="() => router.push('/manage-spots')"
+          :class="[
+            'py-2 rounded px-2 cursor-pointer flex items-center gap-2',
+            isActive('/manage-spots')
+              ? 'bg-blue-500 text-white'
+              : 'hover:bg-green-500',
+          ]"
         >
           <SquareParking size="18" /> Gerenciar Vagas
         </li>
