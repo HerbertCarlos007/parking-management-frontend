@@ -1,4 +1,22 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import parkingSpotService from "@/services/parkingSpot.js";
+
+const parkingSpotsStatus = ref([]);
+
+onMounted(() => {
+  getParkingSpotsStatus();
+});
+
+const getParkingSpotsStatus = async () => {
+  try {
+    const response = await parkingSpotService.getParkingSpotsStatusService();
+    parkingSpotsStatus.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+</script>
 
 <template>
   <div>
@@ -60,47 +78,71 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
     <div
-      class=" h-64 flex flex-col p-5 bg-secondary text-card-foreground rounded-xl border border-border shadow-sm p-4"
+      v-for="spot in parkingSpotsStatus"
+      :key="spot.id"
+      class="h-64 flex flex-col p-5 bg-secondary text-card-foreground rounded-xl border border-border shadow-sm"
     >
+      <!-- Topo -->
       <div class="w-full flex items-start justify-between">
-        <!-- Esquerda -->
         <section class="flex flex-col">
-          <span class="text-white font-semibold">B1</span>
-          <span class="text-gray-400 text-sm">Ocupada</span>
+          <span class="text-white font-semibold">{{ spot.code }}</span>
+
+          <span
+            class="text-sm"
+            :class="
+              spot.status === 'Ocupada' ? 'text-red-500' : 'text-green-500'
+            "
+          >
+            {{ spot.status }}
+          </span>
         </section>
 
-        <!-- Direita -->
         <section
-          class="flex items-center justify-center w-7 h-7 rounded-full border border-red-500 text-red-500"
+          class="flex items-center justify-center w-7 h-7 rounded-full border"
+          :class="
+            spot.status === 'Ocupada'
+              ? 'border-red-500 text-red-500'
+              : 'border-green-500 text-green-500'
+          "
         >
-          X
+          {{ spot.status === "Ocupada" ? "X" : "✓" }}
         </section>
-
-       
       </div>
-       <div class="bg-border h-0.5 mt-5"></div>
 
+      <div class="bg-border h-0.5 mt-5"></div>
 
-      <div class="w-full flex items-start justify-between mt-5">
-        <!-- Esquerda -->
+      <!-- 🔴 Se estiver OCUPADA -->
+      <div
+        v-if="spot.status === 'Ocupada'"
+        class="w-full flex items-start justify-between mt-5"
+      >
         <section class="flex flex-col">
           <span class="text-gray-400 text-sm">Placa</span>
           <span class="text-gray-400 text-sm">Entrada</span>
           <span class="text-gray-400 text-sm">Plano</span>
         </section>
 
-        <!-- Direita -->
-         <section class="flex flex-col">
-          <span class="text-white font-semibold">ABC-9999</span>
-          <span class="text-white font-semibold">20:29</span>
-          <span class="text-white font-semibold">Hora</span>
+        <section class="flex flex-col">
+          <span class="text-white font-semibold">
+            {{ spot.entry?.plate }}
+          </span>
+          <span class="text-white font-semibold">
+            {{ spot.entry?.entered_at }}
+          </span>
+          <span class="text-white font-semibold">
+            {{ spot.entry?.type_entry }}
+          </span>
         </section>
-
-       
       </div>
 
+      <!-- 🟢 Se estiver DISPONÍVEL -->
+      <div
+        v-else
+        class="flex-1 flex items-center justify-center text-green-500 font-semibold"
+      >
+        Vaga livre
+      </div>
     </div>
-    
   </div>
 </template>
 
