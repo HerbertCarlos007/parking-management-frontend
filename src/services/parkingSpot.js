@@ -27,6 +27,15 @@ async function getSpotsStatsService() {
     }
 }
 
+async function createSpotService(spotData) {
+    try {
+        const response = await api.post('parking-spots', spotData)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export default {
-    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService
+    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService, createSpotService
 }

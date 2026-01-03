@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import parkingSpotService from "@/services/parkingSpot.js";
 
 const parkingSpotsStatus = ref([])
@@ -8,6 +8,10 @@ const spotsStats = ref({
   occupied: 0,
   total: 0
 })
+
+const spotForm = reactive({
+  code: "",
+});
 
 onMounted(() => {
   getSpotsStatus();
@@ -27,6 +31,16 @@ const getSpotsStatus = async () => {
   try {
     const response = await parkingSpotService.getSpotsStatsService();
     spotsStats.value = response;
+  } catch (error) {
+    
+  }
+}
+
+const createSpot = async () => {
+  try {
+    await parkingSpotService.createSpotService(spotForm);
+    getSpotsStatus();
+    getParkingSpotsStatus();
   } catch (error) {
     
   }
@@ -76,6 +90,7 @@ const getSpotsStatus = async () => {
 
         <input
           type="text"
+          v-model="spotForm.code"
           placeholder="Ex: A1, B5, C10"
           class="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all"
         />
@@ -83,7 +98,7 @@ const getSpotsStatus = async () => {
     </form>
 
     <button
-      @click="createUser()"
+      @click="createSpot()"
       class="w-full mt-6 text-white bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition shadow-md"
     >
       + Adicionar Vaga
