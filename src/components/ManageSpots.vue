@@ -80,9 +80,9 @@ const createSpot = async () => {
   </div>
 
   <div
-    class="w-full bg-secondary border border-border rounded-xl mt-5 p-6 shadow-md"
+    class="w-full bg-secondary border border-border rounded-xl mt-10 p-6 shadow-md"
   >
-    <h2 class="text-white text-2xl font-semibold mb-4">Cadastrar Nova Vaga</h2>
+    <h2 class="text-white text-2xl font-semibold mb-4 ">Cadastrar Nova Vaga</h2>
 
     <form class="w-full">
       <div class="flex flex-col gap-2">
