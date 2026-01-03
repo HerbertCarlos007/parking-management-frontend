@@ -2,9 +2,15 @@
 import { ref, onMounted } from "vue";
 import parkingSpotService from "@/services/parkingSpot.js";
 
-const parkingSpotsStatus = ref([]);
+const parkingSpotsStatus = ref([])
+const spotsStats = ref({
+  available: 0,
+  occupied: 0,
+  total: 0
+})
 
 onMounted(() => {
+  getSpotsStatus();
   getParkingSpotsStatus();
 });
 
@@ -16,6 +22,16 @@ const getParkingSpotsStatus = async () => {
     console.error(error);
   }
 };
+
+const getSpotsStatus = async () => {
+  try {
+    const response = await parkingSpotService.getSpotsStatsService();
+    spotsStats.value = response;
+  } catch (error) {
+    
+  }
+}
+
 </script>
 
 <template>
@@ -31,21 +47,21 @@ const getParkingSpotsStatus = async () => {
       class="flex-1 flex-col h-36 bg-secondary text-card-foreground flex items-center justify-center rounded-xl border border-border shadow-sm"
     >
       <span class="text-white">Total de Vagas</span>
-      <span class="text-white mt-2 text-2xl">6</span>
+      <span class="text-white mt-2 text-2xl">{{ spotsStats.total }}</span>
     </div>
 
     <div
       class="flex-1 h-36 flex-col bg-secondary text-card-foreground flex items-center justify-center rounded-xl border border-border shadow-sm"
     >
       <span class="text-white">Ocupadas</span>
-      <span class="text-red-600 mt-2 text-2xl">4</span>
+      <span class="text-red-600 mt-2 text-2xl">{{spotsStats.occupied}}</span>
     </div>
 
     <div
       class="flex-1 h-36 flex-col bg-secondary text-card-foreground flex items-center justify-center rounded-xl border border-border shadow-sm"
     >
       <span class="text-white">Disponíveis</span>
-      <span class="text-green-500 mt-2 text-2xl">2</span>
+      <span class="text-green-500 mt-2 text-2xl">{{spotsStats.available}}</span>
     </div>
   </div>
 

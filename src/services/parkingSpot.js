@@ -18,6 +18,15 @@ async function getParkingSpotsStatusService() {
     }
 }
 
+async function getSpotsStatsService() {
+    try {
+        const response = await api.get('spots-stats')
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export default {
-    getParkingSpotsAvailablesService, getParkingSpotsStatusService
+    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService
 }
