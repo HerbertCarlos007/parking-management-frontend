@@ -69,8 +69,15 @@ const isActive = (path) => {
         >
           <Car size="18" /> Clientes e Veículos
         </li>
+
         <li
-          class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"
+          @click="() => router.push('/transactions')"
+          :class="[
+            'py-2 rounded px-2 cursor-pointer flex items-center gap-2',
+            isActive('/transactions')
+              ? 'bg-blue-500 text-white'
+              : 'hover:bg-green-500',
+          ]"
         >
           <Wallet size="18" /> Transações
         </li>
