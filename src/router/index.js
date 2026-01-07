@@ -3,8 +3,16 @@ import ParkingEntryComponent from '@/components/ParkingEntryComponent.vue'
 import UserComponent from '@/components/UserComponent.vue'
 import ManageSpots from '@/components/ManageSpotsComponent.vue'
 import Transactions from '@/components/TransactionComponent.vue'
+import LoginComponent from '@/components/LoginComponent.vue'
 
 const routes = [
+
+     {
+        path: '/login', 
+        name: 'login',
+        component: LoginComponent,
+    },
+
     {
         path: '/parking-entry', 
         name: 'parking entry',
