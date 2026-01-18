@@ -87,9 +87,15 @@ const isActive = (path) => {
           <ChartColumn size="18" /> Relatórios
         </li>
         <li
-          class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"
+          @click="() => router.push('/settings')"
+          :class="[
+            'py-2 rounded px-2 cursor-pointer flex items-center gap-2',
+            isActive('/settings')
+              ? 'bg-blue-500 text-white'
+              : 'hover:bg-green-500',
+          ]"
         >
-          <Settings size="18" /> Configurações
+           <Settings size="18" /> Configurações
         </li>
       </ul>
     </div>

@@ -1,41 +1,48 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import ParkingEntryComponent from '@/components/ParkingEntryComponent.vue'
 import UserComponent from '@/components/UserComponent.vue'
 import ManageSpots from '@/components/ManageSpotsComponent.vue'
 import Transactions from '@/components/TransactionComponent.vue'
 import LoginComponent from '@/components/LoginComponent.vue'
+import parkingSettings from '@/components/parkingSettingsComponent.vue'
 
 const routes = [
 
-     {
-        path: '/login', 
+    {
+        path: '/login',
         name: 'login',
         component: LoginComponent,
     },
 
     {
-        path: '/parking-entry', 
+        path: '/parking-entry',
         name: 'parking entry',
         component: ParkingEntryComponent,
     },
 
     {
-        path: '/users', 
+        path: '/users',
         name: 'users',
         component: UserComponent,
     },
 
     {
-        path: '/manage-spots', 
+        path: '/manage-spots',
         name: 'manage spots',
         component: ManageSpots,
     },
 
-     {
-        path: '/transactions', 
+    {
+        path: '/transactions',
         name: 'Transactions',
         component: Transactions,
     },
+
+    {
+        path: '/settings',
+        name: 'Settings ',
+        component: parkingSettings,
+    }
 
 ]
 
