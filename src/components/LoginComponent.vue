@@ -14,6 +14,7 @@ const login = async () => {
   try {
     const response = await loginService.loginService(loginForm);
     localStorage.setItem("token", response.access_token);
+    localStorage.setItem("id_parking_settings", response.user.id_parking_settings);
     router.push("/parking-entry");
   } catch (error) {}
 };
