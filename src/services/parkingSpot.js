@@ -1,10 +1,10 @@
 import api from './api'
 
-const idParkingSettings = localStorage.getItem('id_parking_settings')
+const idCompany = localStorage.getItem('id_company')
 
 async function getParkingSpotsAvailablesService() {
     try {
-        const response = await api.get(`parking-spots-available/${idParkingSettings}`)
+        const response = await api.get(`parking-spots-available/${idCompany}`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -13,7 +13,7 @@ async function getParkingSpotsAvailablesService() {
 
 async function getParkingSpotsStatusService() {
     try {
-        const response = await api.get(`parking-spots-status/${idParkingSettings}`)
+        const response = await api.get(`parking-spots-status/${idCompany}`)
         return response.data
     } catch (error) {
         console.error(error)
@@ -22,7 +22,7 @@ async function getParkingSpotsStatusService() {
 
 async function getSpotsStatsService() {
     try {
-        const response = await api.get(`spots-stats/${idParkingSettings}`)
+        const response = await api.get(`spots-stats/${idCompany}`)
         return response.data
     } catch (error) {
         console.error(error)

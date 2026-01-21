@@ -14,7 +14,7 @@ const login = async () => {
   try {
     const response = await loginService.loginService(loginForm);
     localStorage.setItem("token", response.access_token);
-    localStorage.setItem("id_parking_settings", response.user.id_parking_settings);
+    localStorage.setItem("id_company", response.user.id_company);
     router.push("/parking-entry");
   } catch (error) {}
 };
@@ -80,10 +80,10 @@ const login = async () => {
               <span class="ml-2 text-sm text-gray-400">Lembrar-me</span>
             </label> -->
             <a
-              href="#"
+              href="/company"
               class="text-sm text-blue-500 hover:text-blue-400 transition"
             >
-              Esqueceu a senha?
+             Não tem cadastro? Criar
             </a>
           </div>
 

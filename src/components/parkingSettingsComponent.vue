@@ -1,10 +1,8 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import parkingSettingsService from "@/services/parkingSettings";
+import companyService from "@/services/company";
 
-const parkingSettings = ref([]);
-
-const parkingSettingForm = reactive({
+const companySettingForm = reactive({
   name: "",
   address: "",
   phone: "",
@@ -24,20 +22,20 @@ onMounted(() => {
 
 const getParkingSettings = async () => {
   try {
-    const { data } = await parkingSettingsService.getParkingSettingsService();
+    const { data } = await companyService.getCompanyService();
     const settings = data[0];
    
-    parkingSettingForm.name = settings.name;
-    parkingSettingForm.address = settings.address;
-    parkingSettingForm.phone = settings.phone;
-    parkingSettingForm.email = settings.email;
-    parkingSettingForm.total_spots = settings.total_spots;
-    parkingSettingForm.grace_period_minutes = settings.grace_period_minutes;
-    parkingSettingForm.opening_time = settings.opening_time;
-    parkingSettingForm.closing_time = settings.closing_time;
-    parkingSettingForm.hourly_rate = settings.hourly_rate;
-    parkingSettingForm.half_hour_rate = settings.half_hour_rate;
-    parkingSettingForm.daily_rate = settings.daily_rate;
+    companySettingForm.name = settings.name;
+    companySettingForm.address = settings.address;
+    companySettingForm.phone = settings.phone;
+    companySettingForm.email = settings.email;
+    companySettingForm.total_spots = settings.total_spots;
+    companySettingForm.grace_period_minutes = settings.grace_period_minutes;
+    companySettingForm.opening_time = settings.opening_time;
+    companySettingForm.closing_time = settings.closing_time;
+    companySettingForm.hourly_rate = settings.hourly_rate;
+    companySettingForm.half_hour_rate = settings.half_hour_rate;
+    companySettingForm.daily_rate = settings.daily_rate;
   } catch (error) {
     console.error(error);
   }
@@ -62,7 +60,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Nome do Estacionamento"
-            v-model="parkingSettingForm.name"
+            v-model="companySettingForm.name"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -72,7 +70,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Endereço"
-            v-model="parkingSettingForm.address"
+            v-model="companySettingForm.address"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -82,7 +80,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Telefone"
-            v-model="parkingSettingForm.phone"
+            v-model="companySettingForm.phone"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -92,7 +90,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="E-mail"
-            v-model="parkingSettingForm.email"
+            v-model="companySettingForm.email"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -110,7 +108,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Total de Vagas"
-            v-model="parkingSettingForm.total_spots"
+            v-model="companySettingForm.total_spots"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -120,7 +118,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Tolerância (minutos)"
-            v-model="parkingSettingForm.grace_period_minutes"
+            v-model="companySettingForm.grace_period_minutes"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -130,7 +128,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Horário de Abertura"
-            v-model="parkingSettingForm.opening_time"
+            v-model="companySettingForm.opening_time"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -140,7 +138,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Horário de Fechamento"
-            v-model="parkingSettingForm.closing_time"
+            v-model="companySettingForm.closing_time"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -158,7 +156,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Preço por Hora (R$)"
-            v-model="parkingSettingForm.hourly_rate"
+            v-model="companySettingForm.hourly_rate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -168,7 +166,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Preço Meia Hora (R$)"
-            v-model="parkingSettingForm.half_hour_rate"
+            v-model="companySettingForm.half_hour_rate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -178,7 +176,7 @@ const getParkingSettings = async () => {
           <input
             type="text"
             placeholder="Preço por Dia (R$)"
-            v-model="parkingSettingForm.daily_rate"
+            v-model="companySettingForm.daily_rate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>

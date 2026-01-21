@@ -2,12 +2,12 @@
 import { ref, onMounted, reactive } from "vue";
 import parkingSpotService from "@/services/parkingSpot.js";
 
-const parkingSpotsStatus = ref([])
+const parkingSpotsStatus = ref([]);
 const spotsStats = ref({
   available: 0,
   occupied: 0,
-  total: 0
-})
+  total: 0,
+});
 
 const spotForm = reactive({
   code: "",
@@ -31,21 +31,16 @@ const getSpotsStatus = async () => {
   try {
     const response = await parkingSpotService.getSpotsStatsService();
     spotsStats.value = response;
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 
 const createSpot = async () => {
   try {
     await parkingSpotService.createSpotService(spotForm);
     getSpotsStatus();
     getParkingSpotsStatus();
-  } catch (error) {
-    
-  }
-}
-
+  } catch (error) {}
+};
 </script>
 
 <template>
@@ -68,21 +63,23 @@ const createSpot = async () => {
       class="flex-1 h-36 flex-col bg-secondary text-card-foreground flex items-center justify-center rounded-xl border border-border shadow-sm"
     >
       <span class="text-white">Ocupadas</span>
-      <span class="text-red-600 mt-2 text-2xl">{{spotsStats.occupied}}</span>
+      <span class="text-red-600 mt-2 text-2xl">{{ spotsStats.occupied }}</span>
     </div>
 
     <div
       class="flex-1 h-36 flex-col bg-secondary text-card-foreground flex items-center justify-center rounded-xl border border-border shadow-sm"
     >
       <span class="text-white">Disponíveis</span>
-      <span class="text-green-500 mt-2 text-2xl">{{spotsStats.available}}</span>
+      <span class="text-green-500 mt-2 text-2xl">{{
+        spotsStats.available
+      }}</span>
     </div>
   </div>
 
   <div
     class="w-full bg-secondary border border-border rounded-xl mt-10 p-6 shadow-md"
   >
-    <h2 class="text-white text-2xl font-semibold mb-4 ">Cadastrar Nova Vaga</h2>
+    <h2 class="text-white text-2xl font-semibold mb-4">Cadastrar Nova Vaga</h2>
 
     <form class="w-full">
       <div class="flex flex-col gap-2">

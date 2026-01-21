@@ -1,10 +1,10 @@
 import api from './api'
 
-const idParkingSettings = localStorage.getItem('id_parking_settings')
+const idCompany = localStorage.getItem('id_company')
 
 async function getUsersService() {
     try {
-        const response = await api.get(`users/${idParkingSettings}`)
+        const response = await api.get(`users/${idCompany}`)
         return response.data
     } catch (error) {
         console.error(error)

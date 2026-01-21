@@ -5,13 +5,26 @@ import ManageSpots from '@/components/ManageSpotsComponent.vue'
 import Transactions from '@/components/TransactionComponent.vue'
 import LoginComponent from '@/components/LoginComponent.vue'
 import parkingSettings from '@/components/parkingSettingsComponent.vue'
+import CompanyComponent from '@/components/CompanyComponent.vue'
 
 const routes = [
+
+    {
+        path: '/',
+        redirect: '/login',
+    },
+
 
     {
         path: '/login',
         name: 'login',
         component: LoginComponent,
+    },
+
+    {
+        path: '/company',
+        name: 'Company',
+        component: CompanyComponent,
     },
 
     {

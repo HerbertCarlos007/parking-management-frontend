@@ -3,16 +3,15 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'  
 import SidebarComponent from './components/SidebarComponent.vue';
 import HeaderComponent from './components/HeaderComponent.vue';
-import LoginComponent from './components/LoginComponent.vue';
 
 const route = useRoute()
-const isLoginPage = computed(() => route.path === '/login')
+const isLoginOrCompanyRoute = computed(() => route.path === '/login' || route.path === '/company')
 
 </script>
 
 <template>
   <!-- LOGIN -->
-  <router-view v-if="isLoginPage" />
+  <router-view v-if="isLoginOrCompanyRoute" />
 
   <!-- SISTEMA -->
   <div v-else class="w-full min-h-screen bg-primary flex flex-col">
