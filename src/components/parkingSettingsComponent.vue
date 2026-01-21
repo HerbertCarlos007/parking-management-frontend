@@ -1,4 +1,48 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted, reactive } from "vue";
+import parkingSettingsService from "@/services/parkingSettings";
+
+const parkingSettings = ref([]);
+
+const parkingSettingForm = reactive({
+  name: "",
+  address: "",
+  phone: "",
+  email: "",
+  total_spots: null,
+  grace_period_minutes: null,
+  opening_time: "",
+  closing_time: "",
+  hourly_rate: null,
+  half_hour_rate: null,
+  daily_rate: null,
+});
+
+onMounted(() => {
+  getParkingSettings();
+});
+
+const getParkingSettings = async () => {
+  try {
+    const { data } = await parkingSettingsService.getParkingSettingsService();
+    const settings = data[0];
+   
+    parkingSettingForm.name = settings.name;
+    parkingSettingForm.address = settings.address;
+    parkingSettingForm.phone = settings.phone;
+    parkingSettingForm.email = settings.email;
+    parkingSettingForm.total_spots = settings.total_spots;
+    parkingSettingForm.grace_period_minutes = settings.grace_period_minutes;
+    parkingSettingForm.opening_time = settings.opening_time;
+    parkingSettingForm.closing_time = settings.closing_time;
+    parkingSettingForm.hourly_rate = settings.hourly_rate;
+    parkingSettingForm.half_hour_rate = settings.half_hour_rate;
+    parkingSettingForm.daily_rate = settings.daily_rate;
+  } catch (error) {
+    console.error(error);
+  }
+};
+</script>
 
 <template>
   <div>
@@ -18,6 +62,7 @@
           <input
             type="text"
             placeholder="Nome do Estacionamento"
+            v-model="parkingSettingForm.name"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -27,6 +72,7 @@
           <input
             type="text"
             placeholder="Endereço"
+            v-model="parkingSettingForm.address"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -36,6 +82,7 @@
           <input
             type="text"
             placeholder="Telefone"
+            v-model="parkingSettingForm.phone"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -45,6 +92,7 @@
           <input
             type="text"
             placeholder="E-mail"
+            v-model="parkingSettingForm.email"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -62,6 +110,7 @@
           <input
             type="text"
             placeholder="Total de Vagas"
+            v-model="parkingSettingForm.total_spots"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -71,6 +120,7 @@
           <input
             type="text"
             placeholder="Tolerância (minutos)"
+            v-model="parkingSettingForm.grace_period_minutes"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -80,6 +130,7 @@
           <input
             type="text"
             placeholder="Horário de Abertura"
+            v-model="parkingSettingForm.opening_time"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -89,6 +140,7 @@
           <input
             type="text"
             placeholder="Horário de Fechamento"
+            v-model="parkingSettingForm.closing_time"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -106,6 +158,7 @@
           <input
             type="text"
             placeholder="Preço por Hora (R$)"
+            v-model="parkingSettingForm.hourly_rate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -115,6 +168,7 @@
           <input
             type="text"
             placeholder="Preço Meia Hora (R$)"
+            v-model="parkingSettingForm.half_hour_rate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -124,6 +178,7 @@
           <input
             type="text"
             placeholder="Preço por Dia (R$)"
+            v-model="parkingSettingForm.daily_rate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
