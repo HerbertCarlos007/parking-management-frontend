@@ -65,11 +65,17 @@ const isActive = (path) => {
           <Users size="18" /> Funcionários
         </li>
         <li
-          class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"
+            @click="() => router.push('/clients')"
+          :class="[
+            'py-2 rounded px-2 cursor-pointer flex items-center gap-2',
+            isActive('/clients')
+              ? 'bg-blue-500 text-white'
+              : 'hover:bg-green-500',
+          ]"
         >
-          <Car size="18" /> Clientes e Veículos
+           <Car size="18" /> Clientes e Veículos
         </li>
-
+       
         <li
           @click="() => router.push('/transactions')"
           :class="[
