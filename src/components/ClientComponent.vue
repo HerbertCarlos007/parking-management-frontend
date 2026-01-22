@@ -1,13 +1,36 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { SquarePen, Trash } from "lucide-vue-next";
 import clienteService from "@/services/client";
 
 const clients = ref([]);
 
+const clientForm = reactive({
+  name: "",
+  phone: "",
+  email: "",
+  document_number: "",
+  plate: "",
+  car_brand: "",
+  color: "",
+  id_company: null
+});
+
 onMounted(() => {
   getClients();
 });
+
+const resetClientForm = () => {
+  clientForm.name = "";
+  clientForm.phone = "";
+  clientForm.email = "";
+  clientForm.document_number = "";
+  clientForm.plate = "";
+  clientForm.car_brand = "";
+  clientForm.color = "";
+  clientForm.id_company = null;
+};
+
 
 const getClients = async () => {
   try {
@@ -15,6 +38,16 @@ const getClients = async () => {
     clients.value = response.data;
   } catch (error) {
     console.error();
+  }
+};
+
+const createUser = async () => {
+  try {
+    await clienteService.createClientService(clientForm);
+    getClients();
+    resetClientForm();
+  } catch (error) {
+    console.error(error);
   }
 };
 </script>
@@ -37,6 +70,7 @@ const getClients = async () => {
           <input
             type="text"
             placeholder="Nome completo"
+            v-model="clientForm.name"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -46,6 +80,7 @@ const getClients = async () => {
           <input
             type="text"
             placeholder="000.000.000-00"
+            v-model="clientForm.document_number"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -55,6 +90,7 @@ const getClients = async () => {
           <input
             type="text"
             placeholder="email@example.com"
+            v-model="clientForm.email"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -64,6 +100,7 @@ const getClients = async () => {
           <input
             type="text"
             placeholder="(00) 00000-0000"
+            v-model="clientForm.phone"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -73,6 +110,7 @@ const getClients = async () => {
           <input
             type="text"
             placeholder="ABC-1234"
+            v-model="clientForm.plate"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -82,6 +120,7 @@ const getClients = async () => {
           <input
             type="text"
             placeholder="Toyota, Honda..."
+            v-model="clientForm.car_brand"
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
@@ -90,12 +129,14 @@ const getClients = async () => {
           <label class="text-sm text-gray-300">Cor</label>
           <input
             type="text"
-            placeholder="Preto, Branco... "
+            placeholder="Preto, Branco..."
+            v-model="clientForm.color"  
             class="bg-black border border-border rounded-md px-4 py-2 focus:outline-none focus:border-blue-600"
           />
         </div>
       </form>
       <button
+        @click="createUser()"
         class="w-full mt-6 text-white bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition shadow-md"
       >
         + Adicionar Cliente
