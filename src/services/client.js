@@ -7,7 +7,7 @@ async function getClientsService() {
         const response = await api.get(`clients/${idCompany}`)
         return response.data
     } catch (error) {
-        console.error(error)
+        console.error()
     }
 }
 
@@ -16,10 +16,19 @@ async function createClientService(clientData) {
         const response = await api.post('clients', clientData)
         return response.data
     } catch (error) {
-        console.error(error)
+        console.error()
+    }
+}
+
+async function updateClientService(client, clientData) {
+    try {
+        const response = await api.put(`clients/${client}`, clientData)
+        return response.data
+    } catch (error) {
+        console.error()
     }
 }
 
 export default {
-    getClientsService, createClientService
+    getClientsService, createClientService, updateClientService
 }

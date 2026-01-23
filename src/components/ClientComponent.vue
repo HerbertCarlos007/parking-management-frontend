@@ -4,6 +4,8 @@ import { SquarePen, Trash } from "lucide-vue-next";
 import clienteService from "@/services/client";
 
 const clients = ref([]);
+const showEditModal = ref(false);
+const editingClientId = ref(null);
 
 const clientForm = reactive({
   name: "",
@@ -14,6 +16,16 @@ const clientForm = reactive({
   car_brand: "",
   color: "",
   id_company: null
+});
+
+const editclientForm = reactive({
+  name: "",
+  phone: "",
+  email: "",
+  document_number: "",
+  plate: "",
+  car_brand: "",
+  color: "",
 });
 
 onMounted(() => {
@@ -41,11 +53,35 @@ const getClients = async () => {
   }
 };
 
-const createUser = async () => {
+const openEditModal = (client) => {
+  editingClientId.value = client.id;
+  console.log(client.id)
+
+  editclientForm.name = client.name;
+  editclientForm.phone = client.phone;
+  editclientForm.email = client.email;
+  editclientForm.document_number = client.document_number;
+  editclientForm.plate = client.plate;
+  editclientForm.car_brand = client.car_brand;
+  editclientForm.color = client.color;
+  showEditModal.value = true;
+};
+
+const createClient = async () => {
   try {
     await clienteService.createClientService(clientForm);
     getClients();
     resetClientForm();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateClient = async () => {
+  try {
+    await clienteService.updateClientService(editingClientId.value, editclientForm);
+    showEditModal.value = false;
+    getClients();
   } catch (error) {
     console.error(error);
   }
@@ -136,7 +172,7 @@ const createUser = async () => {
         </div>
       </form>
       <button
-        @click="createUser()"
+        @click="createClient()"
         class="w-full mt-6 text-white bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition shadow-md"
       >
         + Adicionar Cliente
@@ -180,7 +216,7 @@ const createUser = async () => {
                 class="cursor-pointer"
               />
               <Trash
-                @click="deleteUser(user.id)"
+                @click="deleteUser(client.id)"
                 color="#e01b24"
                 class="cursor-pointer"
               />
@@ -190,6 +226,60 @@ const createUser = async () => {
       </table>
     </div>
   </div>
+
+    <div v-if="showEditModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+  <div class="bg-secondary  p-10 rounded-lg border border-border">
+    <h2 class="text-white text-2xl mb-4">Editar Cliente</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+      <div>
+        <label class="text-sm text-gray-400">Nome</label>
+        <input v-model="editclientForm.name" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">E-mail</label>
+        <input v-model="editclientForm.email" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">Telefone</label>
+        <input v-model="editclientForm.phone" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">CPF/CNPJ</label>
+        <input v-model="editclientForm.document_number" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+      <div>
+        <label class="text-sm text-gray-400">Placa</label>
+        <input v-model="editclientForm.plate" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+       <div>
+        <label class="text-sm text-gray-400">Marca</label>
+        <input v-model="editclientForm.car_brand" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+        <div>
+        <label class="text-sm text-gray-400">Cor</label>
+        <input v-model="editclientForm.color" class="w-full bg-black border border-border rounded px-4 py-2" />
+      </div>
+
+    </div>
+
+    <div class="flex justify-end gap-4 mt-6">
+      <button @click="showEditModal = false" class="px-4 py-2 border border-border text-white rounded">
+        Cancelar
+      </button>
+
+      <button @click="updateClient()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
 </template>
 
 <style scoped></style>
