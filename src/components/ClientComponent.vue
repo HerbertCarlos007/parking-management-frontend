@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import { SquarePen, Trash } from "lucide-vue-next";
-import clienteService from "@/services/client";
+import clientService from "@/services/client";
 
 const clients = ref([]);
 const showEditModal = ref(false);
@@ -43,16 +43,6 @@ const resetClientForm = () => {
   clientForm.id_company = null;
 };
 
-
-const getClients = async () => {
-  try {
-    const response = await clienteService.getClientsService();
-    clients.value = response.data;
-  } catch (error) {
-    console.error();
-  }
-};
-
 const openEditModal = (client) => {
   editingClientId.value = client.id;
   console.log(client.id)
@@ -67,9 +57,18 @@ const openEditModal = (client) => {
   showEditModal.value = true;
 };
 
+const getClients = async () => {
+  try {
+    const response = await clientService.getClientsService();
+    clients.value = response.data;
+  } catch (error) {
+    console.error();
+  }
+};
+
 const createClient = async () => {
   try {
-    await clienteService.createClientService(clientForm);
+    await clientService.createClientService(clientForm);
     getClients();
     resetClientForm();
   } catch (error) {
@@ -79,8 +78,17 @@ const createClient = async () => {
 
 const updateClient = async () => {
   try {
-    await clienteService.updateClientService(editingClientId.value, editclientForm);
+    await clientService.updateClientService(editingClientId.value, editclientForm);
     showEditModal.value = false;
+    getClients();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteClient = async (clientId) => {
+  try {
+    await clientService.deleteClientService(clientId);
     getClients();
   } catch (error) {
     console.error(error);
@@ -216,7 +224,7 @@ const updateClient = async () => {
                 class="cursor-pointer"
               />
               <Trash
-                @click="deleteUser(client.id)"
+                @click="deleteClient(client.id)"
                 color="#e01b24"
                 class="cursor-pointer"
               />

@@ -29,6 +29,16 @@ async function updateClientService(client, clientData) {
     }
 }
 
+async function deleteClientService(client) {
+    try {
+        const response = await api.delete(`clients/${client}`)
+        return response.data
+    } catch (error) {
+        console.error()
+    }
+}   
+
+
 export default {
-    getClientsService, createClientService, updateClientService
+    getClientsService, createClientService, updateClientService, deleteClientService
 }
