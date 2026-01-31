@@ -3,6 +3,7 @@ import { ref, onMounted, reactive } from "vue";
 import companyService from "@/services/company";
 
 const companySettingForm = reactive({
+  id: null,
   name: "",
   address: "",
   phone: "",
@@ -18,13 +19,15 @@ const companySettingForm = reactive({
 
 onMounted(() => {
   getParkingSettings();
+  console.log(companySettingForm.id);
 });
 
 const getParkingSettings = async () => {
   try {
     const { data } = await companyService.getCompanyService();
     const settings = data[0];
-   
+    
+    companySettingForm.id = settings.id;
     companySettingForm.name = settings.name;
     companySettingForm.address = settings.address;
     companySettingForm.phone = settings.phone;
@@ -40,14 +43,30 @@ const getParkingSettings = async () => {
     console.error(error);
   }
 };
+
+const updateCompanySettings = async () => {
+  try {
+    await companyService.updateCompanyService(companySettingForm.id, companySettingForm);
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <template>
-  <div>
-    <h1 class="text-3xl text-white">Configurações do Sistema</h1>
-    <span class="text-gray-400"
-      >Gerencie as configurações gerais do estacionamento</span
-    >
+  <div class="w-full flex justify-between items-center ">
+    <section>
+      <h1 class="text-3xl text-white">Configurações do Sistema</h1>
+      <span class="text-gray-400"
+        >Gerencie as configurações gerais do estacionamento</span
+      >
+    </section>
+
+    <section>
+      <button @click="updateCompanySettings()" class="bg-blue-500 text-white p-2 rounded-md">
+        Salvar Configurações
+      </button>
+    </section>
   </div>
 
   <div class="w-full bg-secondary border-2 border-border rounded-md mt-5 p-6">

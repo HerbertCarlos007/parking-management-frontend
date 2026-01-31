@@ -25,6 +25,7 @@ const createCompanyUserAndLogin = async () => {
   try {
     const companyResponse =
       await companyService.createCompanyService(companyForm);
+      console.log("EMPRESA RESPONSE:", companyResponse);
 
     userForm.id_company = companyResponse.data.id;
 

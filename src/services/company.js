@@ -20,6 +20,17 @@ async function createCompanyService(companyData) {
     }
 }
 
+async function updateCompanyService(companyId, companyData) {
+  try {
+    const { data } = await api.put(`/company/${companyId}`, companyData);
+    return data;
+  } catch (error) {
+    console.error("Erro ao atualizar empresa:", error.response?.data || error.message);
+    throw error; // 🔥 MUITO IMPORTANTE
+  }
+}
+
+
 export default {
-    getCompanyService, createCompanyService
+    getCompanyService, createCompanyService, updateCompanyService
 }
