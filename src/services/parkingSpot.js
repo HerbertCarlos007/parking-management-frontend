@@ -38,6 +38,23 @@ async function createSpotService(spotData) {
     }
 }
 
+async function updateSpotService(spotId, spotData) {
+    try {
+        const response = await api.put(`parking-spots/${spotId}`, spotData)
+    } catch (error) {
+         console.error(error)
+    }
+}
+
+async function deleteSpotService(spotId) {
+    try {
+        const response = await api.delete(`parking-spots/${spotId}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}   
+
 export default {
-    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService, createSpotService
+    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService, createSpotService, updateSpotService, deleteSpotService
 }

@@ -45,7 +45,6 @@ const resetClientForm = () => {
 
 const openEditModal = (client) => {
   editingClientId.value = client.id;
-  console.log(client.id)
 
   editclientForm.name = client.name;
   editclientForm.phone = client.phone;
