@@ -29,6 +29,15 @@ async function getSpotsStatsService() {
     }
 }
 
+async function getOccupancyByHourService() {
+    try {
+        const response = await api.get(`occupancy/${idCompany}`)
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 async function createSpotService(spotData) {
     try {
         const response = await api.post('parking-spots', spotData)
@@ -56,5 +65,5 @@ async function deleteSpotService(spotId) {
 }   
 
 export default {
-    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService, createSpotService, updateSpotService, deleteSpotService
+    getParkingSpotsAvailablesService, getParkingSpotsStatusService, getSpotsStatsService, createSpotService, updateSpotService, deleteSpotService, getOccupancyByHourService
 }
