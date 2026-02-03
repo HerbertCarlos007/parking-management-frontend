@@ -7,6 +7,7 @@ import LoginComponent from '@/components/LoginComponent.vue'
 import parkingSettings from '@/components/parkingSettingsComponent.vue'
 import CompanyComponent from '@/components/CompanyComponent.vue'
 import ClientComponent from '@/components/ClientComponent.vue'
+import DashboardComponent from '@/components/DashboardComponent.vue'
 
 const routes = [
 
@@ -62,6 +63,12 @@ const routes = [
         path: '/clients',
         name: 'Client ',
         component: ClientComponent,
+    },
+
+    {
+        path: '/dashboard',
+        name: 'Dashboard ',
+        component: DashboardComponent,
     }
 
 ]
