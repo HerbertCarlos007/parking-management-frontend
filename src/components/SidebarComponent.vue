@@ -26,10 +26,16 @@ const isActive = (path) => {
     <h3 class="text-[#9e9e9e]">Menu</h3>
     <div>
       <ul>
-        <li
-          class="py-2 hover:bg-green-500 rounded px-2 cursor-pointer flex items-center gap-2"
+         <li
+          @click="() => router.push('/dashboard')"
+          :class="[
+            'py-2 rounded px-2 cursor-pointer flex items-center gap-2',
+            isActive('/dashboard')
+              ? 'bg-blue-500 text-white'
+              : 'hover:bg-green-500',
+          ]"
         >
-          <LayoutGrid size="18" /> Dashboard
+         <LayoutGrid size="18" /> Dashboard
         </li>
         <li
           @click="() => router.push('/parking-entry')"
