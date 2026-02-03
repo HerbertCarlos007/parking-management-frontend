@@ -14,6 +14,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",
+    "chart.js": "^4.5.1",
     "lucide-vue-next": "^0.555.0",
     "sweetalert2": "^11.26.10",
     "tailwindcss": "^4.1.17",
